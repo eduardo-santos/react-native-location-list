@@ -1,6 +1,13 @@
 import { takeEvery, call, put, takeLatest } from "redux-saga/effects";
 
 // ACTIONS
+
+import {
+  POST_API_LOCATION_ADD,
+  POST_API_LOCATION_ADD_SUCCESS,
+  POST_API_LOCATION_ADD_ERROR
+} from "../actions/apiLocationAdd";
+
 import {
   GET_API_LOCATION_LIST,
   GET_API_LOCATION_LIST_SUCCESS,
@@ -14,7 +21,7 @@ const URL_LIST_LOCATIONS = `${BASE_URL}/locations`;
 
 // ACCESS TOKEN
 let currentAccessToken =
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NDIyNSwibmFtZSI6IkFkbWluaXN0cmF0b3IiLCJlbWFpbCI6ImFkbWluQGRldmVsb3BtZW50LmNvbSIsImlhdCI6MTU0ODE5NzkxNSwiZXhwIjoxNTQ4Mjg0MzE1fQ.JQkv4oVIa0JB__tNlJkxyyK5izfR6tKV616u1gcoUD0";
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NjcyLCJuYW1lIjoiQWRtaW5pc3RyYXRvciIsImVtYWlsIjoiYWRtaW5AZGV2ZWxvcG1lbnQuY29tIiwiaWF0IjoxNTQ4Mjk1MzU2LCJleHAiOjE1NDgzODE3NTZ9.e5WUriE_LvMDqIuPesDPGKLoKX4p0C8EiHqCnZWh4So";
 
 // HEADERS
 const headers = new Headers();
@@ -88,9 +95,21 @@ function* handleCallResponse(
 }
 
 // API FETCH CALLS
+const postLocationAdd = location =>
+  fetch(URL_LIST_LOCATIONS, createPostAuth(location));
+
 const getLocationList = () => fetch(URL_LIST_LOCATIONS, createGetAuth());
 
 // API EFFECT FUNCTIONS
+function* postApiLocationAdd(action) {
+  const response = yield call(postLocationAdd, action.location);
+  yield handleCallResponse(
+    response,
+    POST_API_LOCATION_ADD_SUCCESS,
+    POST_API_LOCATION_ADD_ERROR
+  );
+}
+
 function* getApiLocationList() {
   const response = yield call(getLocationList);
   yield handleCallResponse(
@@ -101,6 +120,9 @@ function* getApiLocationList() {
 }
 
 // EXPORTING SAGAS
-export const apiSagas = [takeEvery(GET_API_LOCATION_LIST, getApiLocationList)];
+export const apiSagas = [
+  takeEvery(POST_API_LOCATION_ADD, postApiLocationAdd),
+  takeEvery(GET_API_LOCATION_LIST, getApiLocationList)
+];
 
 export default apiSagas;

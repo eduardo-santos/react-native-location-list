@@ -17,6 +17,11 @@ import { LocationListItem, Separator } from "../components/ListItem";
 
 import { apiGetLocationList } from "../actions/apiLocationList";
 
+import {
+  apiPostLocationAdd,
+  cleanResult as cleanLocationAddResult
+} from "../actions/apiLocationAdd";
+
 const styles = StyleSheet.create({
   flatList: {
     width: "100%"
@@ -40,7 +45,19 @@ class LocationList extends PureComponent {
   }
 
   addRandomLocation = () => {
-    // TODO: Gerar localização randômica.
+    const randomValue = Math.floor(Math.random() * 9999);
+
+    const location = {
+      name: `Localização ${randomValue}`,
+      address: `Endereço da Localização ${randomValue}`,
+      phone: "(11) 12346-5432",
+      type: `Tipo da Localização ${randomValue}`,
+      lat: "10.2345",
+      lng: "-10.2345",
+      description: `Descrição da Localização ${randomValue}`
+    };
+
+    this.props.dispatch(apiPostLocationAdd(location));
   };
 
   getLocationList = () => {
@@ -140,11 +157,15 @@ LocationList.propTypes = {
   navigation: PropTypes.object,
   dispatch: PropTypes.func,
   apiResultData: PropTypes.any,
-  isApiSubmiting: PropTypes.bool
+  isApiSubmiting: PropTypes.bool,
+  apiLocationAddResultData: PropTypes.any,
+  isApiLocationAddSubmiting: PropTypes.bool
 };
 
 const mapStateToProps = state => ({
-  ...state.apiLocationList
+  ...state.apiLocationList,
+  apiLocationAddResultData: state.apiLocationAdd.apiResultData,
+  isApiLocationAddSubmiting: state.apiLocationAdd.isApiSubmiting
 });
 
 export default connect(mapStateToProps)(LocationList);
