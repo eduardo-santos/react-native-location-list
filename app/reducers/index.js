@@ -1,11 +1,15 @@
 import { combineReducers } from "redux";
 
-import apiLocationAdd from "./apiLocationAdd";
 import apiLocationList from "./apiLocationList";
 import apiLocationDetails from "./apiLocationDetails";
+import apiLocationAdd from "./apiLocationAdd";
+import apiLogin from "./apiLogin";
+import apiRegister from "./apiRegister";
 
 export default combineReducers({
-  apiLocationAdd,
   apiLocationList,
-  apiLocationDetails
+  apiLocationDetails,
+  apiLocationAdd,
+  apiLogin,
+  apiRegister
 });

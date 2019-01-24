@@ -1,6 +1,17 @@
 import { takeEvery, call, put, takeLatest } from "redux-saga/effects";
 
 // ACTIONS
+import {
+  POST_API_LOGIN,
+  POST_API_LOGIN_SUCCESS,
+  POST_API_LOGIN_ERROR
+} from "../actions/apiLogin";
+
+import {
+  POST_API_REGISTER,
+  POST_API_REGISTER_SUCCESS,
+  POST_API_REGISTER_ERROR
+} from "../actions/apiRegister";
 
 import {
   POST_API_LOCATION_ADD,
@@ -24,6 +35,8 @@ import {
 const BASE_URL = "https://apiiclinicmobile-nadvviantm.now.sh";
 
 const URL_LIST_LOCATIONS = `${BASE_URL}/locations`;
+const URL_LOGIN = `${BASE_URL}/auth/login`;
+const URL_REGISTER = `${BASE_URL}/auth/register`;
 
 // ACCESS TOKEN
 let currentAccessToken =
@@ -101,6 +114,10 @@ function* handleCallResponse(
 }
 
 // API FETCH CALLS
+const postLogin = request => fetch(URL_LOGIN, createPost(request));
+
+const postRegister = request => fetch(URL_REGISTER, createPost(request));
+
 const postLocationAdd = location =>
   fetch(URL_LIST_LOCATIONS, createPostAuth(location));
 
@@ -110,6 +127,26 @@ const getLocationDetails = idLocation =>
   fetch(`${URL_LIST_LOCATIONS}/${idLocation}`, createGetAuth());
 
 // API EFFECT FUNCTIONS
+function* postApiLogin(action) {
+  const response = yield call(postLogin, action.request);
+  yield handleCallResponse(
+    response,
+    POST_API_LOGIN_SUCCESS,
+    POST_API_LOGIN_ERROR,
+    true
+  );
+}
+
+function* postApiRegister(action) {
+  const response = yield call(postRegister, action.request);
+  yield handleCallResponse(
+    response,
+    POST_API_REGISTER_SUCCESS,
+    POST_API_REGISTER_ERROR,
+    true
+  );
+}
+
 function* postApiLocationAdd(action) {
   const response = yield call(postLocationAdd, action.location);
   yield handleCallResponse(
@@ -139,6 +176,8 @@ function* getApiLocationDetails(action) {
 
 // EXPORTING SAGAS
 export const apiSagas = [
+  takeLatest(POST_API_LOGIN, postApiLogin),
+  takeLatest(POST_API_REGISTER, postApiRegister),
   takeEvery(POST_API_LOCATION_ADD, postApiLocationAdd),
   takeEvery(GET_API_LOCATION_LIST, getApiLocationList),
   takeLatest(GET_API_LOCATION_DETAILS, getApiLocationDetails)
