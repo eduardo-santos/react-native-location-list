@@ -14,6 +14,12 @@ import {
   GET_API_LOCATION_LIST_ERROR
 } from "../actions/apiLocationList";
 
+import {
+  GET_API_LOCATION_DETAILS,
+  GET_API_LOCATION_DETAILS_SUCCESS,
+  GET_API_LOCATION_DETAILS_ERROR
+} from "../actions/apiLocationDetails";
+
 // URLS
 const BASE_URL = "https://apiiclinicmobile-nadvviantm.now.sh";
 
@@ -100,6 +106,9 @@ const postLocationAdd = location =>
 
 const getLocationList = () => fetch(URL_LIST_LOCATIONS, createGetAuth());
 
+const getLocationDetails = idLocation =>
+  fetch(`${URL_LIST_LOCATIONS}/${idLocation}`, createGetAuth());
+
 // API EFFECT FUNCTIONS
 function* postApiLocationAdd(action) {
   const response = yield call(postLocationAdd, action.location);
@@ -119,10 +128,20 @@ function* getApiLocationList() {
   );
 }
 
+function* getApiLocationDetails(action) {
+  const response = yield call(getLocationDetails, action.idLocation);
+  yield handleCallResponse(
+    response,
+    GET_API_LOCATION_DETAILS_SUCCESS,
+    GET_API_LOCATION_DETAILS_ERROR
+  );
+}
+
 // EXPORTING SAGAS
 export const apiSagas = [
   takeEvery(POST_API_LOCATION_ADD, postApiLocationAdd),
-  takeEvery(GET_API_LOCATION_LIST, getApiLocationList)
+  takeEvery(GET_API_LOCATION_LIST, getApiLocationList),
+  takeLatest(GET_API_LOCATION_DETAILS, getApiLocationDetails)
 ];
 
 export default apiSagas;

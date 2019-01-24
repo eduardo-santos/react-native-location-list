@@ -1,6 +1,7 @@
 import { createStackNavigator, createAppContainer } from "react-navigation";
 
 import LocationList from "../screens/LocationList";
+import LocationDetails from "../screens/LocationDetails";
 
 const headerStyleOptions = () => ({
   headerMode: "screen",
@@ -19,6 +20,12 @@ const LoggedStack = createStackNavigator(
       screen: LocationList,
       navigationOptions: {
         headerTitle: "Lista de Localizações"
+      }
+    },
+    LocationDetailsScreen: {
+      screen: LocationDetails,
+      navigationOptions: {
+        headerTitle: "Detalhes da Localização"
       }
     }
   },
