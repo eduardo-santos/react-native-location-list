@@ -1,50 +1,55 @@
 import {
-  POST_API_LOGIN_SUCCESS,
-  POST_API_LOGIN_ERROR,
-  RESET,
-  POST_API_LOGIN,
-  apiPostLogin
-} from "../actions/apiLogin";
-import reducer from "../reducers/apiLogin";
+  POST_API_REGISTER_SUCCESS,
+  POST_API_REGISTER_ERROR,
+  POST_API_REGISTER,
+  cleanResult,
+  apiPostRegister
+} from "../actions/apiRegister";
+import reducer from "../reducers/apiRegister";
 
-describe("actions login", () => {
+describe("actions register", () => {
+  const name = "Eduardo Santos";
   const email = "eduardo.hensantos@gmail.com";
   const password = "admin123";
 
   const request = {
+    name,
     email,
     password
   };
 
-  it("should reset login state", () => {
+  it("should clean register state", () => {
     const currentState = {
+      name,
       email,
       password,
       isApiSubmiting: false,
-      apiResultData: { sucesso: "Usuário logado com sucesso" }
+      apiResultData: { sucesso: "Usuário cadastrado com sucesso" }
     };
 
     const expectedAction = {
+      name: null,
       email: null,
       password: null,
       isApiSubmiting: false,
       apiResultData: null
     };
 
-    expect(reducer(currentState, { type: RESET })).toEqual(expectedAction);
+    expect(reducer(currentState, cleanResult())).toEqual(expectedAction);
   });
 
-  it("should create an action to login user", () => {
+  it("should create an action to register user", () => {
     const expectedAction = {
-      type: POST_API_LOGIN,
+      type: POST_API_REGISTER,
       request
     };
 
-    expect(apiPostLogin(request)).toEqual(expectedAction);
+    expect(apiPostRegister(request)).toEqual(expectedAction);
   });
 
-  it("should start login API call", () => {
+  it("should start register API call", () => {
     const currentState = {
+      name,
       email,
       password,
       isApiSubmiting: false,
@@ -57,17 +62,18 @@ describe("actions login", () => {
       apiResultData: null
     };
 
-    expect(reducer(currentState, apiPostLogin(request))).toEqual(
+    expect(reducer(currentState, apiPostRegister(request))).toEqual(
       expectedAction
     );
   });
 
-  it("should return login API success", () => {
+  it("should return register API success", () => {
     const sagaSuccessResult = {
       auth: true
     };
 
     const currentState = {
+      name,
       email,
       password,
       isApiSubmiting: true,
@@ -81,16 +87,27 @@ describe("actions login", () => {
     };
 
     expect(
-      reducer(currentState, { type: POST_API_LOGIN_SUCCESS, sagaSuccessResult })
+      reducer(currentState, {
+        type: POST_API_REGISTER_SUCCESS,
+        sagaSuccessResult
+      })
     ).toEqual(expectedAction);
   });
 
-  it("should return login API error", () => {
+  it("should return register API error", () => {
     const sagaErrors = {
-      error: "Usuário não encontrado"
+      error: [
+        {
+          location: "body",
+          param: "name",
+          value: 0,
+          msg: "Invalid value"
+        }
+      ]
     };
 
     const currentState = {
+      name,
       email,
       password,
       isApiSubmiting: true,
@@ -104,7 +121,7 @@ describe("actions login", () => {
     };
 
     expect(
-      reducer(currentState, { type: POST_API_LOGIN_ERROR, sagaErrors })
+      reducer(currentState, { type: POST_API_REGISTER_ERROR, sagaErrors })
     ).toEqual(expectedAction);
   });
 });
