@@ -1,6 +1,7 @@
 import { createStackNavigator, createAppContainer } from "react-navigation";
 
 import Login from "../screens/Login";
+import Register from "../screens/Register";
 import LocationList from "../screens/LocationList";
 import LocationDetails from "../screens/LocationDetails";
 
@@ -22,6 +23,12 @@ const LoginStack = createStackNavigator(
       screen: Login,
       navigationOptions: {
         header: null
+      }
+    },
+    RegisterScreen: {
+      screen: Register,
+      navigationOptions: {
+        headerTitle: "Cadastro"
       }
     }
   },

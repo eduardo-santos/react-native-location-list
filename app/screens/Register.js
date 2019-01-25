@@ -8,12 +8,12 @@ import { TextInput } from "../components/TextInput";
 import { Button } from "../components/Button";
 
 import {
-  apiPostLogin,
+  apiPostRegister,
+  changeName,
   changeEmail,
   changePassword,
   cleanResult
-} from "../actions/apiLogin";
-import { cleanResult as cleanRegisterResult } from "../actions/apiRegister";
+} from "../actions/apiRegister";
 import { FullScreenIndicatorOverlay } from "../components/AcitivityIndicators";
 
 const styles = StyleSheet.create({
@@ -22,9 +22,9 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     width: "100%",
     alignItems: "center",
-    paddingTop: 36
+    paddingTop: 10
   },
-  textRegister: {
+  textForgotPassword: {
     marginTop: 20,
     fontSize: 16,
     color: "#2c3738",
@@ -38,11 +38,12 @@ const styles = StyleSheet.create({
   }
 });
 
-class Login extends Component {
+class Register extends Component {
   static propTypes = {
     navigation: PropTypes.object,
     dispatch: PropTypes.func,
     isApiSubmiting: PropTypes.bool,
+    name: PropTypes.string,
     email: PropTypes.string,
     password: PropTypes.string,
     apiResultData: PropTypes.any
@@ -56,6 +57,10 @@ class Login extends Component {
     };
   }
 
+  handleNameInputChange = name => {
+    this.props.dispatch(changeName(name));
+  };
+
   handleEmailInputChange = email => {
     this.props.dispatch(changeEmail(email));
   };
@@ -64,13 +69,13 @@ class Login extends Component {
     this.props.dispatch(changePassword(password));
   };
 
-  loginCallback = () => {
+  registerCallback = () => {
     if (this.props.apiResultData) {
       if (this.props.apiResultData.error) {
         const errorMessage = this.props.apiResultData.error;
         this.props.dispatch(cleanResult());
 
-        Alert.alert("Login inválido", errorMessage);
+        Alert.alert("Cadastro inválido", errorMessage);
       } else {
         this.props.dispatch(cleanResult());
 
@@ -89,7 +94,7 @@ class Login extends Component {
     }
   };
 
-  handleLogin = () => {
+  handleRegister = () => {
     this.setState(
       {
         validateForm: true
@@ -101,34 +106,40 @@ class Login extends Component {
           },
           () => {
             if (
+              !this.nameRef.state.errorMessage &&
               !this.emailRef.state.errorMessage &&
-              !this.passwordRef.state.errorMessage
+              !this.passwordRef.state.errorMessage &&
+              !this.passwordConfirmRef.state.errorMessage
             ) {
               const request = {
+                name: this.props.name,
                 email: this.props.email,
                 password: this.props.password
               };
-              this.props.dispatch(apiPostLogin(request));
+              this.props.dispatch(apiPostRegister(request));
             }
           }
         )
     );
   };
 
-  handleRegister = () => {
-    this.props.dispatch(cleanRegisterResult());
-    this.props.navigation.navigate("RegisterScreen");
-  };
-
   render() {
-    this.loginCallback();
+    this.registerCallback();
 
     return (
       <View style={styles.container}>
-        <Image
-          resizeMode="contain"
-          source={require("../resources/images/company-logo.png")}
-          style={styles.logo}
+        <TextInput
+          ref={r => {
+            this.nameRef = r;
+          }}
+          handleOnChangeText={this.handleNameInputChange}
+          placeholder="Nome"
+          floatingLabel="Seu Nome"
+          type="only-alphabet"
+          required
+          checkSubmitValidation={this.state.validateForm}
+          defaultValue={this.props.name}
+          editable={!this.props.isApiSubmiting}
         />
         <TextInput
           ref={r => {
@@ -142,7 +153,6 @@ class Login extends Component {
           required
           checkSubmitValidation={this.state.validateForm}
           defaultValue={this.props.email}
-          iconRight={{ name: "email", color: "#2695D2" }}
           editable={!this.props.isApiSubmiting}
         />
         <TextInput
@@ -158,21 +168,33 @@ class Login extends Component {
           max={10}
           checkSubmitValidation={this.state.validateForm}
           defaultValue={this.props.password}
-          iconRight={{ name: "lock", color: "#2695D2" }}
           editable={!this.props.isApiSubmiting}
+        />
+        <TextInput
+          ref={r => {
+            this.passwordConfirmRef = r;
+          }}
+          placeholder="Confirmar Senha"
+          floatingLabel="Confirmar Senha"
+          compareTo={{
+            value: this.props.password,
+            errorMessage: "Confirmação de senha não confere."
+          }}
+          secureTextEntry
+          required
+          checkSubmitValidation={this.state.validateForm}
+          min={6}
+          max={10}
         />
         <View style={styles.loginSpace} />
         <Button
-          text="ENTRAR"
-          onPress={this.handleLogin}
+          text="CADASTRAR"
+          onPress={this.handleRegister}
           disabled={this.props.isApiSubmiting}
           width="100%"
         />
-        <Text onPress={this.handleRegister} style={styles.textRegister}>
-          Cadastrar novo usuário
-        </Text>
         {this.props.isApiSubmiting ? (
-          <FullScreenIndicatorOverlay text="Entrando...." />
+          <FullScreenIndicatorOverlay text="Cadastrando...." />
         ) : null}
       </View>
     );
@@ -180,7 +202,7 @@ class Login extends Component {
 }
 
 const mapStateToProps = state => ({
-  ...state.apiLogin
+  ...state.apiRegister
 });
 
-export default connect(mapStateToProps)(Login);
+export default connect(mapStateToProps)(Register);

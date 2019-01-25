@@ -79,7 +79,8 @@ class LocationList extends PureComponent {
         </Text>
       ) : (
         <Text style={styles.emptyList}>
-          Nenhuma localização foi encontrada.
+          Nenhuma localização foi encontrada. Você pode gerar uma nova
+          localização no botão acima.
         </Text>
       );
     }
