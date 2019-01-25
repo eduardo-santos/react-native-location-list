@@ -82,7 +82,7 @@ class LocationDetails extends PureComponent {
   };
 
   renderDetails = () => {
-    if (this.props.apiResultData && !this.props.apiResultData.Errors) {
+    if (this.props.apiResultData && !this.props.apiResultData.error) {
       return (
         <View>
           <Text style={styles.name}>{this.props.apiResultData.name}</Text>

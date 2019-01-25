@@ -39,8 +39,7 @@ const URL_LOGIN = `${BASE_URL}/auth/login`;
 const URL_REGISTER = `${BASE_URL}/auth/register`;
 
 // ACCESS TOKEN
-let currentAccessToken =
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NjcyLCJuYW1lIjoiQWRtaW5pc3RyYXRvciIsImVtYWlsIjoiYWRtaW5AZGV2ZWxvcG1lbnQuY29tIiwiaWF0IjoxNTQ4Mjk1MzU2LCJleHAiOjE1NDgzODE3NTZ9.e5WUriE_LvMDqIuPesDPGKLoKX4p0C8EiHqCnZWh4So";
+let currentAccessToken = null;
 
 // HEADERS
 const headers = new Headers();
@@ -69,7 +68,7 @@ const createPostAuth = request => ({
 function updateAccessToken(accessToken) {
   if (accessToken) {
     currentAccessToken = accessToken;
-    headersAuth.set("Authorization", currentAccessToken);
+    headersAuth.set("x-access-token", currentAccessToken);
   }
 }
 
@@ -84,23 +83,22 @@ function* handleCallResponse(
     const result = yield response.json();
 
     if (response.status !== 200) {
-      let apiErrors = result.Errors
-        ? result.Errors
-        : [{ Message: "Ocorreu um erro inesperado. Tente novamente." }];
+      let apiError = result.error
+        ? result.error
+        : "Ocorreu um erro inesperado. Tente novamente.";
 
       if (response.status === 408) {
-        apiErrors = [
-          {
-            Message:
-              "O tempo limite da requisição foi atingido. Tente novamente."
-          }
-        ];
+        apiError =
+          "O tempo limite da requisição foi atingido. Tente novamente.";
       }
 
-      yield put({ type: actionTypeError, sagaErrors: { Errors: apiErrors } });
+      yield put({
+        type: actionTypeError,
+        sagaErrors: { error: apiError }
+      });
     } else {
       if (updateToken) {
-        updateAccessToken(response.token);
+        updateAccessToken(result.token);
       }
 
       yield put({ type: actionTypeSuccess, sagaSuccessResult: result });
@@ -108,7 +106,7 @@ function* handleCallResponse(
   } catch (e) {
     yield put({
       type: actionTypeError,
-      sagaErrors: { Errors: e.message }
+      sagaErrors: { error: e.message }
     });
   }
 }

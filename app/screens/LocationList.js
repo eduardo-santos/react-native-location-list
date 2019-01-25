@@ -72,7 +72,7 @@ class LocationList extends PureComponent {
     if (this.props.isApiSubmiting) {
       return <Text style={styles.emptyList}>Carregando...</Text>;
     } else {
-      return this.props.apiResultData && this.props.apiResultData.Errors ? (
+      return this.props.apiResultData && this.props.apiResultData.error ? (
         <Text style={styles.emptyList}>
           Ocorreu um erro ao obter a lista de localizações. Faça um swipe para
           baixo e tente novamente.
@@ -91,7 +91,7 @@ class LocationList extends PureComponent {
       this.props.apiLocationAddResultData
     ) {
       this.props.dispatch(cleanLocationAddResult());
-      if (this.props.apiLocationAddResultData.Errors) {
+      if (this.props.apiLocationAddResultData.error) {
         Alert.alert(
           "Erro",
           "Ocorreu um erro na criação da localização. Tente novamente."
@@ -110,7 +110,7 @@ class LocationList extends PureComponent {
         <FlatList
           style={styles.flatList}
           data={
-            this.props.apiResultData && !this.props.apiResultData.Errors
+            this.props.apiResultData && !this.props.apiResultData.error
               ? this.props.apiResultData
               : null
           }

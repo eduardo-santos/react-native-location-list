@@ -1,5 +1,6 @@
 import { createStackNavigator, createAppContainer } from "react-navigation";
 
+import Login from "../screens/Login";
 import LocationList from "../screens/LocationList";
 import LocationDetails from "../screens/LocationDetails";
 
@@ -14,6 +15,20 @@ const headerStyleOptions = () => ({
   })
 });
 
+// Not authenticated route
+const LoginStack = createStackNavigator(
+  {
+    LoginScreen: {
+      screen: Login,
+      navigationOptions: {
+        header: null
+      }
+    }
+  },
+  headerStyleOptions()
+);
+
+// Authenticated route
 const LoggedStack = createStackNavigator(
   {
     LocationListScreen: {
@@ -34,11 +49,13 @@ const LoggedStack = createStackNavigator(
 
 const routeStackNavigator = createStackNavigator(
   {
-    LocalizationListRoute: { screen: LoggedStack }
+    LoginRoute: { screen: LoginStack },
+    LoggedRoute: { screen: LoggedStack }
   },
   {
     mode: "modal",
-    headerMode: "none"
+    headerMode: "none",
+    initialRouteName: "LoginRoute"
   }
 );
 
