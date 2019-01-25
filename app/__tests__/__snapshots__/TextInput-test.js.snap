@@ -1,0 +1,48 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders correctly 1`] = `
+<View
+  style={
+    Array [
+      Object {
+        "height": 48,
+        "width": "100%",
+      },
+      Object {
+        "marginTop": 20,
+      },
+    ]
+  }
+>
+  <View
+    style={
+      Object {
+        "alignItems": "center",
+        "flexDirection": "row",
+      }
+    }
+  >
+    <TextInput
+      allowFontScaling={true}
+      checkSubmitValidation={null}
+      customMarginTop={20}
+      onChangeText={[Function]}
+      onEndEditing={[Function]}
+      onFocus={[Function]}
+      style={
+        Array [
+          Object {
+            "color": "#000000",
+            "flex": 1,
+            "fontSize": 18,
+            "height": "100%",
+            "width": "100%",
+          },
+        ]
+      }
+      underlineColorAndroid="#7f7e81"
+      validateOnChange={true}
+    />
+  </View>
+</View>
+`;

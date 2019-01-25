@@ -14,7 +14,7 @@ import {
   cleanResult
 } from "../actions/apiLogin";
 import { cleanResult as cleanRegisterResult } from "../actions/apiRegister";
-import { FullScreenIndicatorOverlay } from "../components/AcitivityIndicators";
+import { FullScreenIndicatorOverlay } from "../components/ActivityIndicators";
 
 const styles = StyleSheet.create({
   container: {
