@@ -7,6 +7,8 @@ export const CHANGE_PASSWORD = "LOGIN_CHANGE_PASSWORD";
 
 export const CLEAN_RESULT = "LOGIN_CLEAN_RESULT";
 
+export const RESET = "LOGIN_RESET_RESULT";
+
 export const apiPostLogin = request => ({
   type: POST_API_LOGIN,
   request

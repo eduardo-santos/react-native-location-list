@@ -4,7 +4,8 @@ import {
   POST_API_LOGIN_ERROR,
   CHANGE_EMAIL,
   CHANGE_PASSWORD,
-  CLEAN_RESULT
+  CLEAN_RESULT,
+  RESET
 } from "../actions/apiLogin";
 
 const initialState = {
@@ -49,6 +50,8 @@ const reducer = (state = initialState, action) => {
         isApiSubmiting: false,
         apiResultData: null
       };
+    case RESET:
+      return initialState;
     default:
       return state;
   }
