@@ -12,7 +12,7 @@ Clone this repository and run the command:
 ```shell
 npm install
 ```
-and the run the commands for each platform:
+and then run the commands for each platform:
 ### Android
 `react-native run-android`
 ### iOS
