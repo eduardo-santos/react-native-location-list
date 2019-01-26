@@ -23,7 +23,7 @@ Run the command:
 ```shell
 npm test
 ```
-You're also able to run an especific test by running this command for example:
+You're also able to run a specific test by running this command for example:
 ```shell
 npm test 'ActionLogin-test'
 ```
